@@ -1,0 +1,6 @@
+.env
+*.tmp
+.editorconfig
+.eslintignore
+.eslintrc
+README.md

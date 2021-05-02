@@ -1,0 +1,15 @@
+name: changelog-generator
+description: Github action for generating changelog out of pull requests
+inputs:
+  branch:
+    description: 'Pull request base branch (default: default branch)'
+  title:
+    description: 'Changelog title (default: YYYY/MM/DD)'
+  prefix:
+    description: 'Prefix for pull request title (default: "- ")'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'align-left'
+  color: blue

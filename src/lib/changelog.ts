@@ -6,7 +6,6 @@ const PULL_REQUEST_STATE = 'closed';
 const RESULTS_PER_PAGE = 100;
 
 export class Changelog {
-    private branch: string;
     private commits: Array<string>
     private commitPage: number;
     private config: Config;
@@ -14,9 +13,11 @@ export class Changelog {
     private octokit: Octokit;
     private pullRequests: Array<PullRequest>;
     private pullRequestPage: number;
+    private branch: string;
+    private title: string;
+    private prefix: string;
 
     public constructor(config: Config) {
-        this.branch = '';
         this.commits = [];
         this.commitPage = 0;
         this.config = config;
@@ -26,6 +27,9 @@ export class Changelog {
         })
         this.pullRequests = [];
         this.pullRequestPage = 0;
+        this.branch = '';
+        this.title = config.title;
+        this.prefix = config.prefix;
     }
 
     public async run(): Promise<string> {
@@ -38,14 +42,15 @@ export class Changelog {
 
     /**
      * Set default branch used in getCommits and getPullRequests
-     * TODO: param for set branch
      */
     private async setBranch(): Promise<void> {
-        const repository: any = await this.octokit.rest.repos.get({
-            owner: this.config.owner,
-            repo: this.config.repo,
-        });
-        this.branch = repository.default_branch;
+        if (!this.branch) {
+            const repository: any = await this.octokit.rest.repos.get({
+                owner: this.config.owner,
+                repo: this.config.repo,
+            });
+            this.branch = repository.default_branch;
+        }
     }
 
     /**
@@ -109,7 +114,7 @@ export class Changelog {
 
     private async generateChangelog(): Promise<string> {
         // TODO: date
-        let changelog = 'Date';
+        let changelog = this.title;
         let indexOfTag: number;
 
         // If index not found fetch more commits
@@ -123,13 +128,13 @@ export class Changelog {
         }
 
         for(let i = 0;; i++) {
-            const indexOfPullrequest: number = this.commits.indexOf(this.pullRequests[i].commitSha);
-            if (indexOfPullrequest === -1 || indexOfPullrequest > indexOfTag) {
+            const indexOfPullRequest: number = this.commits.indexOf(this.pullRequests[i].commitSha);
+            if (indexOfPullRequest === -1 || indexOfPullRequest > indexOfTag) {
                 break;
             } else if (i === this.pullRequests.length -1) {
                 await this.getPullRequests();
             } else {
-                changelog += `\n${this.pullRequests[i].title}`;
+                changelog += `\n${this.prefix}${this.pullRequests[i].title}`;
             }
         }
 

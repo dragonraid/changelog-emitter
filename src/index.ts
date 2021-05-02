@@ -1,6 +1,7 @@
+import * as dotenv from "dotenv";
+import * as core from '@actions/core';
 import { Config } from "./lib/types";
 import { Changelog } from "./lib/changelog";
-import * as dotenv from "dotenv";
 
 dotenv.config();
 
@@ -15,8 +16,12 @@ const getConfig = (): Config => {
     } else if (!GITHUB_TOKEN) {
         throw new Error('GITHUB_TOKEN was not found');
     }
+
     const ownerAndRepo: Array<string> = GITHUB_REPOSITORY.split('/');
     return {
+        branch: core.getInput('branch') || '',
+        title: core.getInput('title') || new Date().toISOString().split('T')[0].replace(/-/g, '/'),
+        prefix: core.getInput('prefix') || '- ',
         githubToken: GITHUB_TOKEN,
         owner: ownerAndRepo[0],
         repo: ownerAndRepo[1],

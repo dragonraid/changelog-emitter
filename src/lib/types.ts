@@ -1,4 +1,7 @@
 export interface Config {
+    branch: string,
+    title: string,
+    prefix: string,
     githubToken: string,
     owner: string,
     repo: string,
