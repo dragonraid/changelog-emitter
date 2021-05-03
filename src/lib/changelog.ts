@@ -6,7 +6,7 @@ const PULL_REQUEST_STATE = 'closed';
 const RESULTS_PER_PAGE = 100;
 
 export class Changelog {
-    private commits: Array<string>
+    private commits: Array<string>;
     private commitPage: number;
     private config: Config;
     private latestTagCommit: string;
@@ -24,7 +24,7 @@ export class Changelog {
         this.latestTagCommit = '';
         this.octokit = new Octokit({
             auth: config.githubToken,
-        })
+        });
         this.pullRequests = [];
         this.pullRequestPage = 0;
         this.branch = '';
@@ -33,7 +33,7 @@ export class Changelog {
     }
 
     public async run(): Promise<string> {
-        await this.setBranch()
+        await this.setBranch();
         await this.getLatestTag();
         await this.getCommits();
         await this.getPullRequests();
@@ -104,7 +104,7 @@ export class Changelog {
                     url: pullRequest.html_url,
                     title: pullRequest.title,
                     commitSha: pullRequest.merge_commit_sha,
-                }
+                };
             }
         );
 

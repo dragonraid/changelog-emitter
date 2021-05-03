@@ -7,6 +7,9 @@ inputs:
     description: 'Changelog title (default: YYYY/MM/DD)'
   prefix:
     description: 'Prefix for pull request title (default: "- ")'
+outputs:
+  changelog:
+    description: 'Changelog composed from PRs'
 runs:
   using: 'docker'
   image: 'Dockerfile'

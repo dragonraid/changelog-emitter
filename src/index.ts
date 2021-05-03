@@ -1,6 +1,6 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 import * as core from '@actions/core';
-import { Config } from "./lib/types";
+import { Config } from './lib/types';
 import { Changelog } from "./lib/changelog";
 
 dotenv.config();
@@ -26,10 +26,19 @@ const getConfig = (): Config => {
         owner: ownerAndRepo[0],
         repo: ownerAndRepo[1],
     };
-}
+};
 
 (async () => {
-    const config: Config = await getConfig();
-    const changelog: Changelog = new Changelog(config);
-    console.log(await changelog.run());
+    try {
+        core.info('Starting...');
+        const config: Config = await getConfig();
+        const changelog: Changelog = new Changelog(config);
+        const changelogBody: string = await changelog.run();
+        core.info(`Changelog:\n${changelogBody}`);
+        core.setOutput('changelog', changelogBody);
+        core.exportVariable('CHANGELOG', changelogBody);
+        core.info('Finished!');
+    } catch (error) {
+        core.setFailed(`Failed to update changelog due to: ${error}`);
+    }
 })();
