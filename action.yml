@@ -1,5 +1,5 @@
-name: changelog-emitter
-description: Github action for generating changelog out of pull requests
+name: 'Changelog emitter'
+description: 'Github action for generating changelog out of pull requests'
 inputs:
   branch:
     description: 'Pull request base branch (default: default branch)'
