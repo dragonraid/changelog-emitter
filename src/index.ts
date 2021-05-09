@@ -11,20 +11,31 @@ const {
 } = process.env;
 
 const getConfig = (): Config => {
-    if (!GITHUB_REPOSITORY) {
-        throw new Error(`GITHUB_REPOSITORY environment variable has wrong format: ${GITHUB_REPOSITORY}`);
-    } else if (!GITHUB_TOKEN) {
-        throw new Error('GITHUB_TOKEN was not found');
+    const branch = core.getInput('branch') || '';
+    const title = core.getInput('title') || new Date().toISOString().split('T')[0].replace(/-/g, '/');
+    const prefix = core.getInput('prefix') || '-';
+    const githubToken = core.getInput('token') || GITHUB_TOKEN;
+    let owner = core.getInput('owner');
+    let repo = core.getInput('repo');
+
+    if (GITHUB_REPOSITORY && (!owner || !repo)) {
+        const ownerAndRepo: Array<string> = GITHUB_REPOSITORY.split('/');
+        owner = ownerAndRepo[0];
+        repo = ownerAndRepo[1];
+    } else {
+        throw new Error(`Either GITHUB_REPOSITORY environment variable or "owner" and "repo" input must be set.`);
     }
 
-    const ownerAndRepo: Array<string> = GITHUB_REPOSITORY.split('/');
+    if (!githubToken) {
+        throw new Error('Either GITHUB_TOKEN environment variable or "token" input must be set');
+    }
     return {
-        branch: core.getInput('branch') || '',
-        title: core.getInput('title') || new Date().toISOString().split('T')[0].replace(/-/g, '/'),
-        prefix: core.getInput('prefix') || '- ',
-        githubToken: GITHUB_TOKEN,
-        owner: ownerAndRepo[0],
-        repo: ownerAndRepo[1],
+        branch,
+        title,
+        prefix,
+        githubToken,
+        owner,
+        repo,
     };
 };
 

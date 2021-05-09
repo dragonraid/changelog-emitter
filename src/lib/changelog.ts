@@ -112,8 +112,10 @@ export class Changelog {
         this.pullRequestPage++;
     }
 
+    /**
+     * Creates changelog from pull request titles
+     */
     private async generateChangelog(): Promise<string> {
-        // TODO: date
         let changelog = this.title;
         let indexOfTag: number;
 
@@ -134,7 +136,7 @@ export class Changelog {
             } else if (i === this.pullRequests.length -1) {
                 await this.getPullRequests();
             } else {
-                changelog += `\n${this.prefix}${this.pullRequests[i].title}`;
+                changelog += `\n${this.prefix} ${this.pullRequests[i].title}`;
             }
         }
 
