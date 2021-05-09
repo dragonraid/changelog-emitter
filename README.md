@@ -1,17 +1,17 @@
-# changelog-generator
+# changelog-emitter
 
 This github action fetches titles of pull requests between latest release and branch's HEAD and creates changelog from them.
 
 ## Inputs
 
-| Input  |                               Description |               Example |                                                    Default | Required |
-| :----- | ----------------------------------------: | --------------------: | ---------------------------------------------------------: | -------: |
-| token  |              github personal access token |             `ghe_xyz` |                                    **NO DEFAULT PROVIDED** |      yes |
-| branch |               base branch of pull request |                `main` |                                repositories default branch |       no |
-| title  |                           changelog title |           `Changelog` |                                          date `YYYY/MM/DD` |       no |
-| prefix | prefix of pull request title in changelog |                   `*` |                                                        `-` |       no |
-| owner  |       owner or organizatoin of repository |          `dragonraid` | `GITHUB_REPOSITORY` environment variable (part before `/`) |       no |
-| repo   |                                repository | `chnagelog-generator` |  `GITHUB_REPOSITORY` environment variable (part after `/`) |       no |
+| Input  |                               Description |             Example |                                                    Default | Required |
+| :----- | ----------------------------------------: | ------------------: | ---------------------------------------------------------: | -------: |
+| token  |              github personal access token |           `ghe_xyz` |                                    **NO DEFAULT PROVIDED** |      yes |
+| branch |               base branch of pull request |              `main` |                                repositories default branch |       no |
+| title  |                           changelog title |         `Changelog` |                                          date `YYYY/MM/DD` |       no |
+| prefix | prefix of pull request title in changelog |                 `*` |                                                        `-` |       no |
+| owner  |       owner or organization of repository |        `dragonraid` | `GITHUB_REPOSITORY` environment variable (part before `/`) |       no |
+| repo   |                                repository | `changelog-emitter` |  `GITHUB_REPOSITORY` environment variable (part after `/`) |       no |
 
 ## Output
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: dragonraid/changelog-generator@v0.1.0
+        uses: dragonraid/changelog-emitter@v0.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 

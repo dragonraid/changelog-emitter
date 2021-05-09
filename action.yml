@@ -1,4 +1,4 @@
-name: changelog-generator
+name: changelog-emitter
 description: Github action for generating changelog out of pull requests
 inputs:
   branch:

@@ -1,11 +1,15 @@
 {
-    "name": "changelog-generator",
+    "name": "changelog-emitter",
     "version": "0.0.0",
     "description": "Generates changelog from pull-requests titles",
     "main": "dist/index.js",
     "author": {
         "name": "Lukas Novotny",
         "email": "lucass.novotny@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dragonraid/changelog-emitter.git"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
