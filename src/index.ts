@@ -27,7 +27,7 @@ const getConfig = (): Config => {
     }
 
     if (!githubToken) {
-        throw new Error('Either GITHUB_TOKEN environment variable or "token" input must be set.');
+        throw new Error('Either GITHUB_TOKEN environment variable or "github_token" input must be set.');
     }
 
     return {

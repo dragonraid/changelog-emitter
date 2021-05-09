@@ -4,14 +4,14 @@ This github action fetches titles of pull requests between latest release and br
 
 ## Inputs
 
-| Input  |                               Description |             Example |                                                    Default | Required |
-| :----- | ----------------------------------------: | ------------------: | ---------------------------------------------------------: | -------: |
-| token  |              github personal access token |           `ghe_xyz` |                                    **NO DEFAULT PROVIDED** |      yes |
-| branch |               base branch of pull request |              `main` |                                repositories default branch |       no |
-| title  |                           changelog title |         `Changelog` |                                          date `YYYY/MM/DD` |       no |
-| prefix | prefix of pull request title in changelog |                 `*` |                                                        `-` |       no |
-| owner  |       owner or organization of repository |        `dragonraid` | `GITHUB_REPOSITORY` environment variable (part before `/`) |       no |
-| repo   |                                repository | `changelog-emitter` |  `GITHUB_REPOSITORY` environment variable (part after `/`) |       no |
+| Input        |                               Description |             Example |                                                    Default | Required |
+| :----------- | ----------------------------------------: | ------------------: | ---------------------------------------------------------: | -------: |
+| github_token |              github personal access token |           `ghe_xyz` |                                    **NO DEFAULT PROVIDED** |      yes |
+| branch       |               base branch of pull request |              `main` |                                repositories default branch |       no |
+| title        |                           changelog title |         `Changelog` |                                          date `YYYY/MM/DD` |       no |
+| prefix       | prefix of pull request title in changelog |                 `*` |                                                        `-` |       no |
+| owner        |       owner or organization of repository |        `dragonraid` | `GITHUB_REPOSITORY` environment variable (part before `/`) |       no |
+| repo         |                                repository | `changelog-emitter` |  `GITHUB_REPOSITORY` environment variable (part after `/`) |       no |
 
 ## Output
 
