@@ -66,5 +66,4 @@ jobs:
                 name: `${{ steps.tag.outputs.new_tag }}`,
                 body: `${{ steps.changelog.outputs.changelog }}`,
             });
-
 ```
