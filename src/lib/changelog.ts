@@ -1,7 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { Config, PullRequest } from './types';
 
-const NUMBER_OF_TAGS_TO_BE_FETCHED = 1;
 const PULL_REQUEST_STATE = 'closed';
 const RESULTS_PER_PAGE = 100;
 
@@ -9,7 +8,7 @@ export class Changelog {
     private commits: Array<string>;
     private commitPage: number;
     private config: Config;
-    private latestTagCommit: string;
+    private latestTagsCommit: string;
     private octokit: Octokit;
     private pullRequests: Array<PullRequest>;
     private pullRequestPage: number;
@@ -21,7 +20,7 @@ export class Changelog {
         this.commits = [];
         this.commitPage = 0;
         this.config = config;
-        this.latestTagCommit = '';
+        this.latestTagsCommit = '';
         this.octokit = new Octokit({
             auth: config.githubToken,
         });
@@ -34,7 +33,7 @@ export class Changelog {
 
     public async run(): Promise<string> {
         await this.setBranch();
-        await this.getLatestTag();
+        await this.getLatestRelease();
         await this.getCommits();
         await this.getPullRequests();
         return await this.generateChangelog();
@@ -54,15 +53,39 @@ export class Changelog {
     }
 
     /**
-     * Get latest tag
+     * Get latest release and it's commit
      */
-    private async getLatestTag(): Promise<void> {
-        const tags: any = await this.octokit.rest.repos.listTags({
+    private async getLatestRelease(): Promise<void> {
+        const release = await this.octokit.rest.repos.getLatestRelease({
             owner: this.config.owner,
             repo: this.config.repo,
-            per_page: NUMBER_OF_TAGS_TO_BE_FETCHED,
         });
-        this.latestTagCommit = tags.data[0].commit.sha;
+        const tagName = release.data.tag_name;
+
+        // We do not assume we would not find latest release tag, otherwise something
+        // is really wrong with github
+        for (let page = 0;; page++) {
+            const releasesTag = (await this.getTags(page)).filter((tag) => tag.name === tagName);
+            if (releasesTag.length === 1) {
+                this.latestTagsCommit = releasesTag[0].commitSha;
+                break;
+            }
+        }
+        // console.log(JSON.stringify(await this.getTags(0), null, 4));
+        // throw new Error;
+    }
+
+    private async getTags(page: number): Promise<Array<{name: string, commitSha: string}>> {
+        const tags = await this.octokit.rest.repos.listTags({
+            owner: this.config.owner,
+            repo: this.config.repo,
+            per_page: RESULTS_PER_PAGE,
+            page: page,
+        });
+
+        return tags.data.map((tag) => {
+            return { name: tag.name, commitSha: tag.commit.sha };
+        });
     }
 
     /**
@@ -121,7 +144,7 @@ export class Changelog {
 
         // If index not found fetch more commits
         for(;;) {
-            indexOfTag = this.commits.indexOf(this.latestTagCommit);
+            indexOfTag = this.commits.indexOf(this.latestTagsCommit);
             if (indexOfTag === -1) {
                 await this.getCommits();
             } else {
