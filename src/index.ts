@@ -14,7 +14,7 @@ const getConfig = (): Config => {
     const branch = core.getInput('branch') || '';
     const title = core.getInput('title') || new Date().toISOString().split('T')[0].replace(/-/g, '/');
     const prefix = core.getInput('prefix') || '-';
-    const githubToken = core.getInput('token') || GITHUB_TOKEN;
+    const githubToken = core.getInput('github_token') || GITHUB_TOKEN;
     let owner = core.getInput('owner');
     let repo = core.getInput('repo');
 
@@ -27,8 +27,9 @@ const getConfig = (): Config => {
     }
 
     if (!githubToken) {
-        throw new Error('Either GITHUB_TOKEN environment variable or "token" input must be set');
+        throw new Error('Either GITHUB_TOKEN environment variable or "token" input must be set.');
     }
+
     return {
         branch,
         title,
