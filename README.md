@@ -2,7 +2,9 @@
 
 This github action fetches titles of pull requests between latest release and branch's HEAD creates changelog from them.
 
-It can look something like this ![changelog example](./docs/changelog_example.png)
+It can look something like this:
+
+![changelog example](./docs/changelog_example.png)
 
 ## Inputs
 
