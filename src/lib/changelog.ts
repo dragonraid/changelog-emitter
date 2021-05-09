@@ -71,10 +71,11 @@ export class Changelog {
                 break;
             }
         }
-        // console.log(JSON.stringify(await this.getTags(0), null, 4));
-        // throw new Error;
     }
 
+    /**
+     * Get tags
+     */
     private async getTags(page: number): Promise<Array<{name: string, commitSha: string}>> {
         const tags = await this.octokit.rest.repos.listTags({
             owner: this.config.owner,
@@ -153,7 +154,7 @@ export class Changelog {
         }
 
         for(let i = 0;; i++) {
-            const indexOfPullRequest: number = this.commits.indexOf(this.pullRequests[i].commitSha);
+            const indexOfPullRequest = this.commits.indexOf(this.pullRequests[i].commitSha);
             if (indexOfPullRequest === -1 || indexOfPullRequest > indexOfTag) {
                 break;
             } else if (i === this.pullRequests.length -1) {
