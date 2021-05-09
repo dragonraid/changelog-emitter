@@ -1,7 +1,7 @@
 {
     "name": "changelog-emitter",
-    "version": "0.0.0",
-    "description": "Generates changelog from pull-requests titles",
+    "version": "0.2.0",
+    "description": "Emits changelog out of pull-requests' titles",
     "main": "dist/index.js",
     "author": {
         "name": "Lukas Novotny",
