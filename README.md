@@ -1,7 +1,8 @@
 # changelog-generator
 
-This github action creates changelog from pull request titles. It takes titles of pull requests
-between latest tag and branches HEAD.
+This github action fetches titles of pull requests between latest release and branch's HEAD creates changelog from them.
+
+It can look something like this ![changelog example](./docs/changelog_example.png)
 
 ## Inputs
 
@@ -24,8 +25,10 @@ Text of changelog can also be accessed in subsequent steps via `CHANGELOG` envir
 
 ## Example
 
+This example together with other useful github actions creates new release with pull requests titles as release's body.
+
 ```yaml
-name: create changelog
+name: release
 
 on:
   push:
@@ -33,14 +36,37 @@ on:
       - main
 
 jobs:
-  changelog:
+  release:
     runs-on: ubuntu-20.04
     steps:
-      - name: create changelog
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create changelog
         id: changelog
-        uses: dragonraid/changelog-generator
+        uses: dragonraid/changelog-generator@v0.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-    outputs:
-      changelog: ${{ steps.changelog.outputs.changelog }}
+
+      - name: Bump tag
+        id: tag
+        uses: mathieudutour/github-tag-action@v5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: main
+          default_bump: minor
+
+      - name: Create github release
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: `${{ steps.tag.outputs.new_tag }}`,
+                name: `${{ steps.tag.outputs.new_tag }}`,
+                body: `${{ steps.changelog.outputs.changelog }}`,
+            });
+
 ```
