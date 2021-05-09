@@ -4,7 +4,7 @@ This github action fetches titles of pull requests between latest release and br
 
 It can look something like this:
 
-![changelog example](./docs/example.png)
+<img src="./docs/changelog_example.png" width="50%">
 
 ## Inputs
 
