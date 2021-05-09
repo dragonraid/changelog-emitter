@@ -1,6 +1,6 @@
 # changelog-generator
 
-This github action fetches titles of pull requests between latest release and branch's HEAD creates changelog from them.
+This github action fetches titles of pull requests between latest release and branch's HEAD and creates changelog from them.
 
 ## Inputs
 
@@ -23,7 +23,7 @@ Text of changelog can also be accessed in subsequent steps via `CHANGELOG` envir
 
 ## Example
 
-This example together with other useful github actions creates new release with pull requests titles as release's body.
+This example, together with other useful github actions, creates new release with pull requests titles as release's body.
 
 ```yaml
 name: release
