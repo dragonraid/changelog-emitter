@@ -1,7 +1,11 @@
 FROM node:14
 
+WORKDIR /app
+
 COPY . .
 
-RUN npm install --only=prod
+# TODO: separate build and run container
+RUN npm install \
+    /app/node_modules/.bin/tsc
 
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT [ "node", "/app/dist/index.js" ]
