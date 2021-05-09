@@ -1,4 +1,4 @@
-# changelog-emitter
+# Changelog emitter
 
 This github action fetches titles of pull requests between latest release and branch's HEAD and creates changelog from them.
 
