@@ -50,7 +50,7 @@ const getConfig = (): Config => {
         core.info(`Changelog:\n${changelogContent}`);
         core.setOutput('changelog', changelogContent);
         core.setOutput('isEmpty', changelog.isEmpty);
-        core.setOutput('CHANGELOG', changelogContent);
+        core.exportVariable('CHANGELOG', changelogContent);
         core.exportVariable('IS_EMPTY', changelog.isEmpty);
         core.info('Finished!');
     } catch (error) {
