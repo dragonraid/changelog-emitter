@@ -15,6 +15,7 @@ export class Changelog {
     private branch: string;
     private title: string;
     private prefix: string;
+    private changelogBody: string;
 
     public constructor(config: Config) {
         this.commits = [];
@@ -29,14 +30,33 @@ export class Changelog {
         this.branch = '';
         this.title = config.title;
         this.prefix = config.prefix;
+        this.changelogBody = '';
     }
 
-    public async run(): Promise<string> {
+    /**
+     * Get changelog from title and changelog body
+     */
+    public get changelog(): string {
+        return `${this.title}\n${this.changelogBody}`;
+    }
+
+    /**
+     * Check if changelog is empty
+     */
+    public get isEmpty(): boolean {
+        if (this.changelogBody) return false;
+        return true;
+    }
+
+    /**
+     * Run main logic
+     */
+    public async run(): Promise<void> {
         await this.setBranch();
         await this.getLatestRelease();
         await this.getCommits();
         await this.getPullRequests();
-        return await this.generateChangelog();
+        await this.generateChangelog();
     }
 
     /**
@@ -53,7 +73,8 @@ export class Changelog {
     }
 
     /**
-     * Get latest release and it's commit
+     * Get latest release and it's commit.
+     * TODO: fails if there is no release
      */
     private async getLatestRelease(): Promise<void> {
         const release = await this.octokit.rest.repos.getLatestRelease({
@@ -61,7 +82,6 @@ export class Changelog {
             repo: this.config.repo,
         });
         const tagName = release.data.tag_name;
-
         // We do not assume we would not find latest release tag, otherwise something
         // is really wrong with github
         for (let page = 0;; page++) {
@@ -117,7 +137,6 @@ export class Changelog {
             per_page: RESULTS_PER_PAGE,
             page: this.pullRequestPage,
         });
-
         const mergedPullRequests: any = rawPullRequests.data.filter(
             (pullRequest: any) => pullRequest.merged_at,
         );
@@ -137,10 +156,10 @@ export class Changelog {
     }
 
     /**
-     * Creates changelog from pull request titles
+     * Creates changelog body from pull request titles
      */
-    private async generateChangelog(): Promise<string> {
-        let changelog = this.title;
+    private async generateChangelog(): Promise<void> {
+        let changelogBody = '';
         let indexOfTag: number;
 
         // If index not found fetch more commits
@@ -155,15 +174,14 @@ export class Changelog {
 
         for(let i = 0;; i++) {
             const indexOfPullRequest = this.commits.indexOf(this.pullRequests[i].commitSha);
-            if (indexOfPullRequest === -1 || indexOfPullRequest > indexOfTag) {
+            if (indexOfPullRequest === -1 || indexOfPullRequest >= indexOfTag) {
                 break;
             } else if (i === this.pullRequests.length -1) {
                 await this.getPullRequests();
             } else {
-                changelog += `\n${this.prefix} ${this.pullRequests[i].title}`;
+                changelogBody += `${this.prefix} ${this.pullRequests[i].title}\n`;
             }
         }
-
-        return changelog;
+        this.changelogBody = changelogBody;
     }
 }

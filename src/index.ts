@@ -45,12 +45,14 @@ const getConfig = (): Config => {
         core.info('Starting...');
         const config: Config = await getConfig();
         const changelog: Changelog = new Changelog(config);
-        const changelogBody: string = await changelog.run();
-        core.info(`Changelog:\n${changelogBody}`);
-        core.setOutput('changelog', changelogBody);
-        core.exportVariable('CHANGELOG', changelogBody);
+        await changelog.run();
+        const changelogContent = changelog.changelog;
+        core.info(`Changelog:\n${changelogContent}`);
+        core.setOutput('changelog', changelogContent);
+        core.setOutput('isEmpty', changelog.isEmpty);
+        core.exportVariable('IS_EMPTY', changelog.isEmpty);
         core.info('Finished!');
     } catch (error) {
-        core.setFailed(`Failed to update changelog due to: ${error}`);
+        core.setFailed(`Failed to generate changelog due to: ${error}`);
     }
 })();
