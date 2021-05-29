@@ -15,9 +15,10 @@ This github action fetches titles of pull requests between latest release and br
 
 ## Output
 
-| Output    |       Description |
-| :-------- | ----------------: |
-| changelog | text of changelog |
+| Output    |                        Description |
+| :-------- | ---------------------------------: |
+| changelog |                  text of changelog |
+| isEmpty   | whether text of changelog is empty |
 
 Text of changelog can also be accessed in subsequent steps via `CHANGELOG` environment variable.
 
@@ -47,6 +48,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bump tag
+        if: steps.changelog.outputs.isEmpty == false
         id: tag
         uses: mathieudutour/github-tag-action@v5.5
         with:
@@ -55,6 +57,7 @@ jobs:
           default_bump: minor
 
       - name: Create github release
+        if: steps.changelog.outputs.isEmpty == false
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -16,6 +16,8 @@ inputs:
 outputs:
   changelog:
     description: 'Changelog composed from PRs'
+  isEmpty:
+    description: 'Whether changelog is empty'
 runs:
   using: 'docker'
   image: 'Dockerfile'
