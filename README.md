@@ -36,14 +36,14 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Create changelog
         id: changelog
-        uses: dragonraid/changelog-emitter@v0.2.0
+        uses: dragonraid/changelog-emitter
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
