@@ -43,7 +43,7 @@ const getConfig = (): Config => {
 (async () => {
     try {
         core.info('Starting...');
-        const config: Config = await getConfig();
+        const config: Config = getConfig();
         const changelog: Changelog = new Changelog(config);
         await changelog.run();
         const changelogContent = changelog.changelog;
